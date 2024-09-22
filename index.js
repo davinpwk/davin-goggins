@@ -22,35 +22,32 @@ var name = '';
 var problem = '';
 var motivation = '';
 
-const runPrompt = async () => {
+const runPrompt = async (retryCount = 0) => {
+    const maxRetries = 3;
     const prompt = `
-        my name is ${name}, my problem is ${problem}.
-        Return response in the folowing parsable JSON format:
+        My name is ${name}, my problem is ${problem}.
+        Return response in the following parsable JSON format:
 
         {
-            "A": "answer",
+            "A": "answer"
         }
     `;
 
-    try{
+    try {
         const response = await openai.chat.completions.create({
             model: 'gpt-4',
             messages: [
-                { role: 'system', content: "You are David Goggins. Provide harsh, motivational one paragraph speech relating with the user's struggles." },
-                { role: 'user', content: prompt }
+                {
+                    role: 'system',
+                    content: "You are David Goggins. Provide harsh, motivational speech relating with the user's struggles.",
+                },
+                { role: 'user', content: prompt },
             ],
-            max_tokens: 500,
-        })
-
-        // console.log(response.choices[0].message.content);
-        // const parsableJSONResponse = response.choices[0].message.content;
-        // const parsedResponse = JSON.parse(response.choices[0].message.content);
-        // motivation = parsedResponse.A;
-        // console.log(motivation);
+            max_tokens: 200,
+        });
 
         const result = response.choices[0].message.content;
 
-        // Attempt to parse JSON
         try {
             const jsonResponse = JSON.parse(result);
             console.log(jsonResponse.A); // Output the parsed answer
@@ -58,13 +55,19 @@ const runPrompt = async () => {
         } catch (error) {
             console.error('Error parsing JSON:', error);
             console.log('Original response:', result); // For debugging
+
+            // Retry if the parsing fails, up to maxRetries
+            if (retryCount < maxRetries) {
+                console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
+                await runPrompt(retryCount + 1);
+            } else {
+                console.error('Max retries reached. Could not parse JSON.');
+            }
         }
-
-
-    } catch(error){
-        console.error('error fetching completion:', error);
+    } catch (error) {
+        console.error('Error fetching completion:', error);
     }
-}
+};
 
 // runPrompt();
 
