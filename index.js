@@ -39,7 +39,7 @@ const runPrompt = async (retryCount = 0) => {
             messages: [
                 {
                     role: 'system',
-                    content: "You are David Goggins. Provide harsh, motivational speech relating with the user's struggles.",
+                    content: "You are David Goggins. Provide a paragraph of harsh, motivational one paragraph speech relating with the user's struggles.",
                 },
                 { role: 'user', content: prompt },
             ],
