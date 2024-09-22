@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAVIN GOGGINS</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title center-text">DAVIN GOGGINS</h1>
+        <div class="inner-container">
+            <h2>Mentality Motivation</h2>
+            <% if(locals.motivation) {%>
+                <div class="motivation-container">
+                    <p>
+                        <%= motivation %>
+                    </p>
+                </div>
+                <form action="/" method="get">
+                    <input class="btn" type="submit" value="SIR! YES! SIR!">
+                </form>
+            <% } else { %>
+                <form action="/" method="post">
+                    <input class="name-input" type="text" name="name" id="" placeholder="NAME">
+                    <textarea name="problem" id="" placeholder="Tell me your problem SON"></textarea>
+                    <!-- <input class="problem-input" type="text" name="problem" id="" placeholder="PROBLEMS"> -->
+                    <input class="btn" type="submit" value="Motivation">
+                </form>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

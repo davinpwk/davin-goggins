@@ -1,0 +1,115 @@
+/* Basic Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #333;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    background-color: #444;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 600px;
+}
+
+/* Title and Heading Styling */
+h1.title, h2 {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h1.title {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: #ff5e57;
+}
+
+h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #ffcc00;
+}
+
+/* Motivation Response Styling */
+.motivation-container p {
+    font-family: monospace;
+    font-size: 1.2em;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    color: #ddd;
+    text-align: justify;
+    border: 1px solid #555;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+.inner-container {
+    margin-top: 20px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 2px solid #555;
+    background-color: #222;
+    color: #fff;
+    font-size: 1.1em;
+    box-sizing: border-box;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #888;
+}
+
+textarea {
+    height: 150px;
+    resize: none;
+}
+
+/* Button Styling */
+.btn {
+    background-color: #ff5e57;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: #ff3d33;
+}
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+    h1.title {
+        font-size: 2.5em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    input, textarea {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 30px;
+    }
+}
