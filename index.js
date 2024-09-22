@@ -36,17 +36,31 @@ const runPrompt = async () => {
         const response = await openai.chat.completions.create({
             model: 'gpt-4',
             messages: [
-                { role: 'system', content: "You are David Goggins. Provide harsh, motivational speech relating with the user's struggles." },
+                { role: 'system', content: "You are David Goggins. Provide harsh, motivational one paragraph speech relating with the user's struggles." },
                 { role: 'user', content: prompt }
             ],
-            max_tokens: 200,
+            max_tokens: 500,
         })
 
         // console.log(response.choices[0].message.content);
-        const parsableJSONResponse = response.choices[0].message.content;
-        const parsedResponse = JSON.parse(response.choices[0].message.content);
-        motivation = parsedResponse.A;
-        console.log(motivation);
+        // const parsableJSONResponse = response.choices[0].message.content;
+        // const parsedResponse = JSON.parse(response.choices[0].message.content);
+        // motivation = parsedResponse.A;
+        // console.log(motivation);
+
+        const result = response.choices[0].message.content;
+
+        // Attempt to parse JSON
+        try {
+            const jsonResponse = JSON.parse(result);
+            console.log(jsonResponse.A); // Output the parsed answer
+            motivation = jsonResponse.A;
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            console.log('Original response:', result); // For debugging
+        }
+
+
     } catch(error){
         console.error('error fetching completion:', error);
     }
