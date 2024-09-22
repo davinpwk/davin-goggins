@@ -1,28 +1,24 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import dotenv from 'dotenv'
+import express from 'express';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 dotenv.config();
 
-import OpenAI from 'openai'
+import OpenAI from 'openai';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 //* openAIApi area (start)
 
-var name = '';
-var problem = '';
-var motivation = '';
-
-const runPrompt = async (retryCount = 0) => {
+// Make runPrompt function return the motivation instead of storing it in a global variable
+const runPrompt = async (name, problem, retryCount = 0) => {
     const maxRetries = 3;
     const prompt = `
         My name is ${name}, my problem is ${problem}.
@@ -39,7 +35,7 @@ const runPrompt = async (retryCount = 0) => {
             messages: [
                 {
                     role: 'system',
-                    content: "You are David Goggins. Provide a paragraph of harsh, motivational one paragraph speech relating with the user's struggles.",
+                    content: "You are David Goggins. Provide harsh, one paragraph motivational speech relating with the user's struggles.",
                 },
                 { role: 'user', content: prompt },
             ],
@@ -51,7 +47,7 @@ const runPrompt = async (retryCount = 0) => {
         try {
             const jsonResponse = JSON.parse(result);
             console.log(jsonResponse.A); // Output the parsed answer
-            motivation = jsonResponse.A;
+            return jsonResponse.A; // Return the motivation
         } catch (error) {
             console.error('Error parsing JSON:', error);
             console.log('Original response:', result); // For debugging
@@ -59,36 +55,37 @@ const runPrompt = async (retryCount = 0) => {
             // Retry if the parsing fails, up to maxRetries
             if (retryCount < maxRetries) {
                 console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
-                await runPrompt(retryCount + 1);
+                return await runPrompt(name, problem, retryCount + 1);
             } else {
                 console.error('Max retries reached. Could not parse JSON.');
+                return "Sorry, I couldn't generate a proper response. Try again!";
             }
         }
     } catch (error) {
         console.error('Error fetching completion:', error);
+        return "Sorry, there was an error fetching your motivation.";
     }
 };
 
-// runPrompt();
-
 //* openAIApi area (end)
 
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
     res.render("index.ejs");
-})
+});
 
-app.post("/", async(req,res) => {
+app.post("/", async (req, res) => {
     console.log(req.body);
-    try{
-        name = req.body.name;
-        problem = req.body.problem;
-        await runPrompt();
-        res.render("index.ejs", {motivation: motivation});
-    } catch(error){
+    try {
+        const name = req.body.name;
+        const problem = req.body.problem;
+        const motivation = await runPrompt(name, problem); // Use user-specific data
+        res.render("index.ejs", { motivation: motivation }); // Send motivation to the template
+    } catch (error) {
         console.log(error.message);
+        res.render("index.ejs", { motivation: "Error generating motivation. Please try again." });
     }
-})
+});
 
 app.listen(port, () => {
-    console.log(`server is running on port ${port}`);
-})
+    console.log(`Server is running on port ${port}`);
+});
